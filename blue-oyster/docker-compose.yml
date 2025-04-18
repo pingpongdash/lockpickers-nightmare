@@ -1,0 +1,23 @@
+# version: '3.8'
+services:
+  blue-oyster:
+    hostname: blue-oyster
+    container_name: blue-oyster
+    tty: true
+    build:
+      context: .
+      args:
+        SHELL: ${SHELL}
+        BLUE_OYSTER_UID: ${BLUE_OYSTER_UID}
+        BLUE_OYSTER_GID: ${BLUE_OYSTER_GID}
+        BLUE_OYSTER_USER: ${BLUE_OYSTER_USER}
+        BLUE_OYSTER_GROUP: ${BLUE_OYSTER_GROUP}
+    volumes:
+    - source: ${BASE_DIRECTORY}/logs
+      target: /var/log/blue-oyster-log
+      type: bind
+    user: ${BLUE_OYSTER_USER}
+    restart: always
+    network_mode: none
+    dns: 127.0.0.127
+
