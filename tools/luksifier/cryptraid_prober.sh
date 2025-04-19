@@ -9,8 +9,8 @@ KEY_SPEC=""
 PARAM_FILE=""
 KEY_CANDIDATES_DIR=""
 RAID_MEMBERS=()
-CONST_PICKER="const_picker/pick_const.sh"
-# CONST_PICKER="const_picker/const_picker.rb"
+CONST_PICKER="bash const_picker/pick_const.sh"
+# CONST_PICKER="ruby const_picker/const_picker.rb"
 KEY_FILES=()
 MAXDEPTH=1
 RAID_NAME=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 16 | head -n 1)
@@ -62,7 +62,7 @@ if [[ -n "$PARAM_FILE" ]]; then
     KEY_INDEX=0
     while IFS= read -r line; do
         KEYFILE="/tmp/keyfile_$KEY_INDEX.bin"
-        echo -n "$(bash $CONST_PICKER $line)" > "$KEYFILE"
+        echo -n "$($CONST_PICKER $line)" > "$KEYFILE"
         KEY_FILES+=("$KEYFILE")
         ((KEY_INDEX++))
     done < "$PARAM_FILE"
@@ -83,7 +83,8 @@ for MEMBER in "${RAID_MEMBERS[@]}"; do
     echo "Trying ${MEMBER} : with ${KEY_FILES[$index]}"
     if [ ! -e "${MEMBER}" ]; then
         echo "${MEMBER} not found."
-        exit 1
+        continue
+        # exit 1
     fi
     for KEY_FILE in "${KEY_FILES[@]}"; do
         cryptsetup open "${MEMBER}" "${RAID_NAME}_${MEMBER_NAME}" --key-file="${KEY_FILE}" || {

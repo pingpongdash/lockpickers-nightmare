@@ -39,21 +39,21 @@ fi
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
-            --members)
+            -m|--members)
                 shift
                 while [[ $# -gt 0 && "$1" != --* ]]; do
                     RAID_MEMBERS+=("$1")
                     shift
                 done
                 ;;
-            --key-files)
+            -k|--key-files)
                 shift
                 while [[ $# -gt 0 && "$1" != --* ]]; do
                     KEY_FILES+=("$1")
                     shift
                 done
                 ;;
-            --raid-name)
+            -n|--raid-name)
                 shift
                 RAID_NAME="$1"
                 shift
@@ -75,10 +75,6 @@ if [[ ${#RAID_MEMBERS[@]} -eq 0 || ${#KEY_FILES[@]} -eq 0 || -z "$RAID_NAME" ]];
     echo "Usage: --members <RAID members> --key-files <key files> --raid-name <RAID name>"
     exit 1
 fi
-
-echo ${RAID_MEMBERS[@]}
-echo ${KEY_FILES[@]}
-echo ${RAID_NAME}
 
 MEMBER_COUNT=${#RAID_MEMBERS[@]}
 
